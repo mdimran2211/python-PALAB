@@ -1,0 +1,115 @@
+// 1️⃣ Reverse an array (modify in place).
+
+arr = [1, 4, 3, 2, 6, 5]
+arr.reverse()
+print(arr)
+
+
+// 2️⃣ Find minimum and maximum element in array.
+
+arr = [1, 4, 3, 5, 8, 6]
+print([min(arr), max(arr)])
+
+
+// 3️⃣ Find kth smallest element in array.
+
+arr = [10, 5, 4, 3, 48, 6, 2, 33, 53, 10]
+k = 4
+arr.sort()
+print(arr[k-1])
+
+
+// 4️⃣ Union of two arrays (distinct elements only).
+
+a = [1, 2, 3, 2, 1]
+b = [3, 2, 2, 3, 3, 2]
+union = list(set(a + b))
+print(union)
+
+
+// 5️⃣ Find largest element in array.
+
+arr = [1, 8, 7, 56, 90]
+print(max(arr))
+
+
+// 6️⃣ Rotate array by one position clockwise.
+
+arr = [1, 2, 3, 4, 5]
+arr = [arr[-1]] + arr[:-1]
+print(arr)
+
+
+// 7️⃣ Maximum sum subarray (Kadane’s Algorithm).
+
+arr = [2, 3, -8, 7, -1, 2, 3]
+max_sum = arr[0]
+current_sum = arr[0]
+
+for i in range(1, len(arr)):
+    current_sum = max(arr[i], current_sum + arr[i])
+    max_sum = max(max_sum, current_sum)
+
+print(max_sum)
+
+
+// 8️⃣ Search Insert Position (Binary Search O(log n)).
+
+nums = [1, 3, 5, 6]
+target = 5
+left, right = 0, len(nums)-1
+
+while left <= right:
+    mid = (left + right)//2
+    if nums[mid] == target:
+        print(mid)
+        break
+    elif nums[mid] < target:
+        left = mid + 1
+    else:
+        right = mid - 1
+else:
+    print(left)
+
+
+// 9️⃣ Two Sum problem.
+
+nums = [2, 7, 11, 15]
+target = 9
+lookup = {}
+
+for i, num in enumerate(nums):
+    if target - num in lookup:
+        print([lookup[target - num], i])
+        break
+    lookup[num] = i
+
+
+// 🔟 Minimum number of jumps to reach end.
+
+arr = [1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9]
+n = len(arr)
+
+if n <= 1:
+    print(0)
+elif arr[0] == 0:
+    print(-1)
+else:
+    maxReach = arr[0]
+    step = arr[0]
+    jump = 1
+
+    for i in range(1, n):
+        if i == n-1:
+            print(jump)
+            break
+
+        maxReach = max(maxReach, i + arr[i])
+        step -= 1
+
+        if step == 0:
+            jump += 1
+            if i >= maxReach:
+                print(-1)
+                break
+            step = maxReach - i
