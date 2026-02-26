@@ -1,0 +1,160 @@
+// 1️⃣ Given an array of chocolates and m students, distribute packets such that 
+// the difference between maximum and minimum chocolates is minimum.
+
+def min_diff(arr, m):
+    arr.sort()
+    min_diff = float('inf')
+    for i in range(len(arr) - m + 1):
+        diff = arr[i + m - 1] - arr[i]
+        min_diff = min(min_diff, diff)
+    return min_diff
+
+print(min_diff([3,4,1,9,56,7,9,12], 5))
+
+
+// 2️⃣ Given x and an array, find the smallest subarray with sum > x.
+
+def smallest_subarray(arr, x):
+    n = len(arr)
+    min_len = n + 1
+    curr_sum = 0
+    start = 0
+    for end in range(n):
+        curr_sum += arr[end]
+        while curr_sum > x:
+            min_len = min(min_len, end - start + 1)
+            curr_sum -= arr[start]
+            start += 1
+    return min_len if min_len <= n else 0
+
+print(smallest_subarray([1,4,45,6,0,19], 51))
+
+
+// 3️⃣ Three-way partition around range a and b in O(n).
+
+def three_way_partition(arr, a, b):
+    low, mid, high = 0, 0, len(arr)-1
+    while mid <= high:
+        if arr[mid] < a:
+            arr[low], arr[mid] = arr[mid], arr[low]
+            low += 1
+            mid += 1
+        elif arr[mid] > b:
+            arr[mid], arr[high] = arr[high], arr[mid]
+            high -= 1
+        else:
+            mid += 1
+    return arr
+
+print(three_way_partition([1,4,3,6,2,1], 1, 3))
+
+
+// 4️⃣ Minimum swaps to bring elements ≤ k together.
+
+def min_swaps(arr, k):
+    count = sum(1 for num in arr if num <= k)
+    bad = sum(1 for num in arr[:count] if num > k)
+    ans = bad
+    j = count
+    for i in range(len(arr)):
+        if j >= len(arr):
+            break
+        if arr[i] > k:
+            bad -= 1
+        if arr[j] > k:
+            bad += 1
+        ans = min(ans, bad)
+        j += 1
+    return ans
+
+print(min_swaps([2,1,5,6,3], 3))
+
+
+// 5️⃣ Return true if all array elements are palindrome.
+
+def check_array(arr):
+    for num in arr:
+        if str(num) != str(num)[::-1]:
+            return False
+    return True
+
+print(check_array([111,222,333,444]))
+
+
+// 6️⃣ Calculate median of an array.
+
+def find_median(arr):
+    arr.sort()
+    n = len(arr)
+    if n % 2 == 1:
+        return arr[n//2]
+    else:
+        return (arr[n//2 - 1] + arr[n//2]) / 2
+
+print(find_median([90,100,78,89,67]))
+
+
+// 7️⃣ Spiral traversal of matrix.
+
+def spiral(matrix):
+    result = []
+    while matrix:
+        result += matrix.pop(0)
+        if matrix and matrix[0]:
+            for row in matrix:
+                result.append(row.pop())
+        if matrix:
+            result += matrix.pop()[::-1]
+        if matrix and matrix[0]:
+            for row in matrix[::-1]:
+                result.append(row.pop(0))
+    return result
+
+print(spiral([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]))
+
+
+// 8️⃣ Search element in sorted 2D matrix in O(log m*n).
+
+def search_matrix(matrix, target):
+    rows = len(matrix)
+    cols = len(matrix[0])
+    left, right = 0, rows*cols - 1
+    while left <= right:
+        mid = (left + right)//2
+        value = matrix[mid//cols][mid%cols]
+        if value == target:
+            return True
+        elif value < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return False
+
+print(search_matrix([[1,3,5,7],[10,11,16,20],[23,30,34,60]], 3))
+
+
+// 9️⃣ Median in row-wise sorted matrix.
+
+def matrix_median(mat):
+    arr = []
+    for row in mat:
+        arr.extend(row)
+    arr.sort()
+    return arr[len(arr)//2]
+
+print(matrix_median([[1,3,5],[2,6,9],[3,6,9]]))
+
+
+// 🔟 Row with maximum number of 1s.
+
+def row_with_max_ones(arr):
+    max_count = 0
+    index = -1
+    for i in range(len(arr)):
+        count = sum(arr[i])
+        if count > max_count:
+            max_count = count
+            index = i
+    return index
+
+print(row_with_max_ones([[0,1,1,1],[0,0,1,1],[1,1,1,1],[0,0,0,0]]))
