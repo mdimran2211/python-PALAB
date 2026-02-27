@@ -1,0 +1,217 @@
+# Q1. Kth Smallest Element
+def kth_smallest(arr, k):
+    arr.sort()
+    return arr[k - 1]
+
+
+# Q2. Minimize Heights
+def minimize_heights(arr, k):
+    n = len(arr)
+    arr.sort()
+    ans = arr[-1] - arr[0]
+    small = arr[0] + k
+    big = arr[-1] - k
+    
+    if small > big:
+        small, big = big, small
+    
+    for i in range(1, n - 1):
+        subtract = arr[i] - k
+        add = arr[i] + k
+        
+        if subtract >= small or add <= big:
+            continue
+        
+        if big - subtract <= add - small:
+            small = subtract
+        else:
+            big = add
+    
+    return min(ans, big - small)
+
+
+# Q3. Minimum Jumps
+def min_jumps(arr):
+    n = len(arr)
+    if n <= 1:
+        return 0
+    if arr[0] == 0:
+        return -1
+    
+    maxReach = arr[0]
+    step = arr[0]
+    jump = 1
+    
+    for i in range(1, n):
+        if i == n - 1:
+            return jump
+        
+        maxReach = max(maxReach, i + arr[i])
+        step -= 1
+        
+        if step == 0:
+            jump += 1
+            if i >= maxReach:
+                return -1
+            step = maxReach - i
+    
+    return -1
+
+
+# Q4. Find Duplicate Number (Floyd’s Cycle Detection)
+def find_duplicate(nums):
+    slow = nums[0]
+    fast = nums[0]
+    
+    while True:
+        slow = nums[slow]
+        fast = nums[nums[fast]]
+        if slow == fast:
+            break
+    
+    slow = nums[0]
+    while slow != fast:
+        slow = nums[slow]
+        fast = nums[fast]
+    
+    return slow
+
+
+# Q5. Merge Two Sorted Arrays Without Extra Space
+def merge_arrays(a, b):
+    n, m = len(a), len(b)
+    gap = (n + m + 1) // 2
+    
+    while gap > 0:
+        i = 0
+        j = gap
+        
+        while j < n + m:
+            if j < n and a[i] > a[j]:
+                a[i], a[j] = a[j], a[i]
+            elif i < n and j >= n and a[i] > b[j - n]:
+                a[i], b[j - n] = b[j - n], a[i]
+            elif i >= n and j >= n and b[i - n] > b[j - n]:
+                b[i - n], b[j - n] = b[j - n], b[i - n]
+            
+            i += 1
+            j += 1
+        
+        if gap == 1:
+            gap = 0
+        else:
+            gap = (gap + 1) // 2
+
+
+# Q6. Merge Intervals
+def merge_intervals(intervals):
+    intervals.sort()
+    merged = [intervals[0]]
+    
+    for current in intervals[1:]:
+        last = merged[-1]
+        if current[0] <= last[1]:
+            last[1] = max(last[1], current[1])
+        else:
+            merged.append(current)
+    
+    return merged
+
+
+# Q7. Common Elements in Three Sorted Arrays
+def common_elements(a, b, c):
+    i = j = k = 0
+    result = []
+    
+    while i < len(a) and j < len(b) and k < len(c):
+        if a[i] == b[j] == c[k]:
+            if not result or result[-1] != a[i]:
+                result.append(a[i])
+            i += 1
+            j += 1
+            k += 1
+        elif a[i] < b[j]:
+            i += 1
+        elif b[j] < c[k]:
+            j += 1
+        else:
+            k += 1
+    
+    return result if result else [-1]
+
+
+# Q8. Factorial of Large Number
+def factorial_large(n):
+    result = [1]
+    
+    for i in range(2, n + 1):
+        carry = 0
+        for j in range(len(result)):
+            prod = result[j] * i + carry
+            result[j] = prod % 10
+            carry = prod // 10
+        
+        while carry:
+            result.append(carry % 10)
+            carry //= 10
+    
+    return result[::-1]
+
+
+# Q9. Check Subset
+def is_subset(a, b):
+    count = {}
+    for num in a:
+        count[num] = count.get(num, 0) + 1
+    
+    for num in b:
+        if num not in count or count[num] == 0:
+            return False
+        count[num] -= 1
+    
+    return True
+
+
+# Q10. Triplet Sum
+def triplet_sum(arr, target):
+    arr.sort()
+    n = len(arr)
+    
+    for i in range(n - 2):
+        left = i + 1
+        right = n - 1
+        
+        while left < right:
+            total = arr[i] + arr[left] + arr[right]
+            if total == target:
+                return True
+            elif total < target:
+                left += 1
+            else:
+                right -= 1
+    
+    return False
+
+
+# Q11. Trapping Rain Water
+def trap_rain_water(arr):
+    left = 0
+    right = len(arr) - 1
+    left_max = right_max = 0
+    water = 0
+    
+    while left <= right:
+        if arr[left] < arr[right]:
+            if arr[left] >= left_max:
+                left_max = arr[left]
+            else:
+                water += left_max - arr[left]
+            left += 1
+        else:
+            if arr[right] >= right_max:
+                right_max = arr[right]
+            else:
+                water += right_max - arr[right]
+            right -= 1
+    
+    return water
